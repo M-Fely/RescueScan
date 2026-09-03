@@ -1,4 +1,5 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
+import { aiAnalyzer } from "../services/AIService.js";
 
 export const createUpload = async (req, res) => {
   try {
@@ -26,9 +27,9 @@ export const createUpload = async (req, res) => {
       .from("report-images")
       .getPublicUrl(fileName);
 
-    return res
-      .status(200)
-      .json({ success: true, image_url: urlData.publicUrl });
+    const description = await aiAnalyzer(urlData.publicUrl);
+
+    return res.status(200).json({ success: true, description });
 
     // return res.status(200).json({ success: true, data });
   } catch (error) {
